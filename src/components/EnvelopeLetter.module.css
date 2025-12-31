@@ -1,0 +1,473 @@
+:root {
+  --envW: 280px;
+  --envH: 190px;
+  --envBg: #f6d9c7; /* warm cream */
+  --envShadow: #c58f74;
+  --paperW: 280px;
+  --paperH: 270px;
+  --paperBg: #fff5ea;
+  --paperShadow: #caa58a;
+  --ink: #1b0e08;
+  --heartBg: #7a0014;
+  --heartText: #ffffff;
+}
+
+@media (min-width: 650px) {
+  :root {
+    --envW: 500px;
+    --envH: 330px;
+    --paperW: 520px;
+    --paperH: 400px;
+  }
+}
+
+.wrap {
+  width: 100%;
+  display: grid;
+  place-items: center;
+  user-select: none;
+  -webkit-user-select: none;
+  position: relative;
+  padding-top: 40px;
+}
+
+.dragBounds {
+  position: fixed;
+  inset: 12px;
+  pointer-events: none;
+}
+
+.envelope {
+  position: relative;
+  width: min(var(--envW), calc(100vw - 32px));
+  height: min(var(--envH), 42vh);
+  background: var(--envBg);
+  box-shadow:
+    inset 0 0 30px -5px var(--envShadow),
+    0 30px 120px rgba(0, 0, 0, 0.35);
+  border-radius: 18px;
+  transform-style: preserve-3d;
+}
+
+/* the fold elements exist only for their ::before triangles */
+.left,
+.right,
+.bottom {
+  position: absolute;
+  inset: 0;
+}
+
+.envelope::before {
+  content: "˚ʚ❤︎ɞ˚";
+  font-size: clamp(2.6rem, 6vw, 5rem);
+  color: rgba(255, 255, 255, 0.9);
+  position: absolute;
+  left: 50%;
+  top: 30%;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
+
+.flap {
+  width: 100%;
+  height: 71%;
+  position: absolute;
+  top: 0;
+  z-index: 4;
+  overflow: hidden;
+  transform-origin: top;
+  transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  pointer-events: none;
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+}
+
+.folds {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.flap::before,
+.left::before,
+.right::before,
+.bottom::before {
+  content: "";
+  transform: rotate(45deg);
+  background: var(--envBg);
+  box-shadow: 0 0 30px -5px var(--envShadow);
+  width: 100%;
+  aspect-ratio: 1;
+  display: block;
+  position: absolute;
+  top: 60%;
+}
+
+.flap::before {
+  top: auto;
+  bottom: 22px;
+  border-radius: 5rem;
+}
+
+@media (min-width: 650px) {
+  .flap::before {
+    bottom: 96px;
+  }
+}
+
+.left::before {
+  top: 10%;
+  left: -65%;
+}
+
+.right::before {
+  top: 10%;
+  right: -65%;
+}
+
+.bottom::before {
+  top: 60%;
+  border-radius: 5rem;
+}
+
+.heart {
+  z-index: 5;
+  position: absolute;
+  border: none;
+  width: clamp(70px, 14vw, 150px);
+  aspect-ratio: 1;
+  background:
+    radial-gradient(circle at 60% 65%, var(--heartBg) 64%, #0000 65%) top left/50% 50%,
+    radial-gradient(circle at 40% 65%, var(--heartBg) 64%, #0000 65%) top right/50% 50%,
+    conic-gradient(from -45deg at 50% 85.5%, var(--heartBg) 90deg, #0000 0) bottom/100% 50%;
+  background-repeat: no-repeat;
+  left: 50%;
+  top: 70%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  animation: heartPulse 1.9s ease-in-out infinite;
+}
+
+.heart::before {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 100%;
+  aspect-ratio: 1;
+  background:
+    radial-gradient(circle at 60% 65%, #ffffff26 64%, #0000 65%) top left/50% 50%,
+    radial-gradient(circle at 40% 65%, #ffffff26 64%, #0000 65%) top right/50% 50%,
+    conic-gradient(from -45deg at 50% 85.5%, #ffffff26 90deg, #0000 0) bottom/100% 50%;
+  background-repeat: no-repeat;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: 0.25s ease all;
+  z-index: -1;
+}
+
+.heart:hover::before,
+.heart:active::before,
+.heart:focus-visible::before {
+  transform: translate(-50%, -50%) scale(0.85);
+}
+
+.heartText {
+  display: block;
+  color: var(--heartText);
+  font-size: clamp(1.1rem, 2.4vw, 1.6rem);
+  letter-spacing: 0.02em;
+  transform: translateY(-10px);
+}
+
+@keyframes heartPulse {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    filter: drop-shadow(0 0 0 rgba(255, 154, 180, 0));
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.04);
+    filter: drop-shadow(0 0 18px rgba(255, 154, 180, 0.35));
+  }
+}
+
+.active .flap {
+  transform: rotateX(-180deg);
+  perspective: 10px;
+}
+
+.active .heart {
+  display: none;
+}
+
+.letters {
+  position: fixed;
+  left: 50%;
+  top: calc(12px + env(safe-area-inset-top, 0px));
+  transform: translateX(-50%);
+  width: min(var(--paperW), calc(100vw - 24px));
+  /* Use svh to avoid mobile browser bar jumps; fall back to vh */
+  height: min(var(--paperH), calc(100svh - 150px));
+  z-index: 10;
+  pointer-events: none; /* papers themselves are clickable */
+}
+
+.paper {
+  pointer-events: auto;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: min(var(--paperW), calc(100vw - 24px));
+  height: 100%; /* match the .letters sizing so page 1 and page 2 are identical */
+  background: var(--paperBg);
+  color: var(--ink);
+  box-shadow: inset 0 0 20px -5px var(--paperShadow);
+  border-radius: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none; /* important for touch dragging */
+  text-align: left; /* override outer 'text-center' so paragraphs look clean */
+}
+
+.gifBox {
+  /* Size relative to the paper itself, with safe bounds (prevents too big/small). */
+  width: clamp(170px, 62cqw, 320px);
+  aspect-ratio: 0.990625;
+  max-height: clamp(170px, 55cqh, 320px);
+  margin-inline: auto;
+  /* Blend into the paper: no frame, no shadow, no panel */
+  border-radius: 0;
+  overflow: visible;
+  border: 0;
+  box-shadow: none;
+  background: transparent; /* remove the white panel behind the GIF */
+}
+
+.gifFrame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  object-fit: contain; /* prevent distortion, keep GIF proportions */
+  background: transparent;
+  /* If the GIF has a white matte/background, this makes the white blend into the paper. */
+  mix-blend-mode: multiply;
+}
+
+.paper:active {
+  cursor: grabbing;
+}
+
+.paperInner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 22px 18px 44px; /* tighter: keep button close without huge empty space */
+  overflow: hidden; /* no scroll: we instead scale layout via responsive sizing */
+  container-type: size; /* enables cqw/cqh sizing for the GIF */
+}
+
+.paperTexture {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.12;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(0, 0, 0, 0.25) 0, transparent 42%),
+    radial-gradient(circle at 80% 30%, rgba(0, 0, 0, 0.18) 0, transparent 40%),
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.03) 0px, rgba(0, 0, 0, 0.03) 1px, transparent 1px, transparent 12px);
+}
+
+.paperTopMark {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.4rem;
+  color: rgba(122, 0, 20, 0.9);
+  opacity: 0.9;
+}
+
+.title {
+  font-size: clamp(1.6rem, 3.2vw, 2.2rem);
+  margin-top: 18px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.body {
+  font-size: clamp(1.05rem, 2.1vw, 1.4rem);
+  line-height: 1.12;
+  margin: 0;
+  text-align: left;
+}
+
+.twoCol {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  align-content: start;
+}
+
+@media (min-width: 650px) {
+  .twoCol {
+    grid-template-columns: 40% 60%;
+    gap: 18px;
+  }
+}
+
+.rosesBox {
+  height: clamp(150px, 28vh, 240px); /* don't steal all vertical space on mobile */
+  min-height: 150px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.04), transparent);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  /* padding-bottom: 10px; */
+  /* Enable container units inside the animated flowers so they scale to this box */
+  container-type: size;
+}
+
+.textCol {
+  min-width: 0;
+}
+
+@media (min-width: 650px) {
+  /* Desktop: don't rely on % heights (paper may be auto-height); give roses a stable panel size */
+  .rosesBox {
+    height: clamp(240px, 34vh, 340px);
+    min-height: 240px;
+    /* padding-bottom: 16px; */
+  }
+}
+
+@media (max-width: 420px) {
+  :root {
+    /* Give the paper more usable room on phones (without exceeding the viewport). */
+    --paperH: clamp(320px, 62svh, 430px);
+  }
+  .paperInner {
+    padding: 18px 14px 44px;
+  }
+  .title {
+    font-size: 1.25rem;
+    margin-top: 14px;
+    margin-bottom: 8px;
+  }
+  .body {
+    font-size: 0.98rem;
+    line-height: 1.08;
+  }
+  .twoCol {
+    gap: 10px;
+  }
+  .rosesBox {
+    height: clamp(130px, 22vh, 180px);
+    min-height: 130px;
+  }
+}
+
+@media (max-width: 360px) {
+  :root {
+    --paperH: clamp(300px, 60svh, 400px);
+  }
+  .paperInner {
+    padding: 16px 12px 42px;
+  }
+  .title {
+    font-size: 1.15rem;
+  }
+  .body {
+    font-size: 0.92rem;
+  }
+  .rosesBox {
+    height: clamp(120px, 20vh, 160px);
+    min-height: 120px;
+  }
+}
+
+.pageBtn {
+  position: absolute;
+  right: 14px;
+  bottom: 10px;
+  font-size: 12px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.55);
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  padding: 7px 10px;
+  border-radius: 999px;
+}
+
+.pageActions {
+  position: absolute;
+  right: 14px;
+  bottom: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.pageActions .pageBtn {
+  position: static;
+}
+
+.pageBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.loveWrap {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding-inline: 14px;
+}
+
+.loveStack {
+  width: 100%;
+  max-width: 520px;
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+}
+
+.loveGifTop {
+  width: clamp(110px, 36cqw, 190px);
+  height: auto;
+  object-fit: contain;
+  background: transparent;
+  mix-blend-mode: multiply; /* helps if the GIF has a light background */
+}
+
+.loveLine1 {
+  font-family: var(--font-hand);
+  font-size: clamp(1.9rem, 6.6vw, 3.2rem);
+  line-height: 1.02;
+  letter-spacing: 0.02em;
+  color: rgba(122, 0, 20, 0.9);
+}
+
+.loveLine2 {
+  font-family: var(--font-serif);
+  font-size: clamp(2.4rem, 8.2vw, 4rem);
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(122, 0, 20, 0.92);
+  text-shadow: 0 14px 44px rgba(0, 0, 0, 0.12);
+}
+
+.pageBtn:hover {
+  background: rgba(255, 255, 255, 0.85);
+}
+
+
