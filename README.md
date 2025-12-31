@@ -1,37 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# to-clara
 
-## Getting Started
+A romantic, cinematic New Year website built with **Next.js (App Router)**, **Tailwind CSS**, and **Framer Motion**.
 
-First, run the development server:
+## Disclaimer
+
+This project was created **as a personal, non-commercial gift** and for learning/portfolio purposes.
+
+- **No affiliation** with any artists, labels, or creators mentioned in the audio/GIF credits.
+- **All copyrighted assets remain owned by their respective owners.**
+- If you are the rights holder and want anything removed/credited differently, please open an issue or contact the repo owner.
+
+## Run locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Production build
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm run start
+```
 
-## Learn More
+## Configuration (edit content here)
 
-To learn more about Next.js, take a look at the following resources:
+All user-editable content (target date, text, audio paths/volumes, timings) is centralized in:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `clara.config.ts`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+After editing it, restart `npm run dev`.
 
-## Deploy on Vercel
+## Credits
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Music / Audio
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# to-clara
+- **Background music**: `/public/audio/[ 샤이니 (SHINee) - Stand By Me ] 피아노 커버.mp3`
+  - Credit: **SHINee – “Stand By Me” (piano cover)** (original song rights belong to the original rights holders; cover credit belongs to the cover creator/uploader).
+- **Voice clips (message parts)**:
+  - `/public/audio/audio 1.mp3`
+  - `/public/audio/audio 2.mp3`
+  - `/public/audio/audio 3.mp3`
+  - `/public/audio/audio 4.mp3`
+  - `/public/audio/audio 5.mp3`
+  - `/public/audio/audio 6.mp3`
+  - `/public/audio/audio 7.mp3`
+  - (Recorded/collected by the project author for this personal experience.)
+
+### GIFs / Images
+
+- `public/bubu-dudu-flower-gift.gif` — credit to the original creator/uploader of **Bubu & Dudu**.
+- `public/kawaii-cute.gif` — credit to the original creator/uploader.
+
+If you want, paste the original source links here for stronger attribution:
+- `SOURCE_LINK_FOR_bubu-dudu-flower-gift.gif`
+- `SOURCE_LINK_FOR_kawaii-cute.gif`
+
+### Libraries
+
+- Next.js
+- React
+- Tailwind CSS
+- Framer Motion
+- `fireworks-js`
