@@ -2,7 +2,7 @@
 // After changing it, restart `npm run dev`.
 
 export const claraConfig = {
-  targetDate: "2025-12-31T11:30:00",
+  targetDate: "2025-12-31T23:30:00",
 
   countdown: {
     title: "Will open today at 11:30 PM",
